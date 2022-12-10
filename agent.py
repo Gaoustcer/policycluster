@@ -21,6 +21,14 @@ class Agent(object):
         return reward
             # pass
     
+    def randomly(self):
+        done = False
+        reward = 0
+        self.env.reset()
+        while done == False:
+            _,r,done,_ = self.env.step(self.env.action_space.sample())
+            reward += r
+        return reward
     def getaction(self,targetstate):
         actions,epsilon = self.data.similarity(targetstate)
         done = False
@@ -39,6 +47,9 @@ if __name__ == "__main__":
     # action = agent.getaction(state)
     # print("action is",action)
     N = 10
+    for epoch in range(N):
+        r = agent.randomly()
+        print("epoch {}".format(epoch),"random reward is {}".format(r))
     for epoch in range(N):
         r = agent.validate()
         print("epoch {}".format(epoch),"reward is {}".format(r))
