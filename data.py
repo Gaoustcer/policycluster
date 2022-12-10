@@ -9,6 +9,7 @@ class sequentialdata(object):
         with open("dataset.pkl","rb") as fp:
             data = pickle.load(fp)
         keylist = ['observations','actions','rewards','terminals','next_observations']
+        self.keylist = keylist
         self.data = {}
         for key in keylist:
             self.data[key] = list()
@@ -24,6 +25,15 @@ class sequentialdata(object):
         for key in keylist:
             self.data[key] = np.stack(self.data[key],axis=0)
             print(self.data[key].shape)
+        
+    def __len__(self):
+        return len(self.data['rewards'])
+    
+    def __getitem__(self,index):
+        l = []
+        for key in self.keylist:
+            l.append(self.data[key][index])
+        return l
 
 def plot3d(data:np.array,savefig:str):
     fig = plt.figure()
@@ -35,3 +45,10 @@ def plot3d(data:np.array,savefig:str):
 if __name__ == "__main__":
     inst = sequentialdata()
     plot3d(inst.data['actions'],"whole_distribution_action.png")
+    for obs,act,r,done,next_obs in inst:
+        print(obs)
+        print(act)
+        print(r)
+        print(done)
+        print(next_obs)
+        exit()
